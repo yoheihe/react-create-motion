@@ -149,7 +149,7 @@ function BasicExample() {
         </div>
         <Button onClick={onClickAdd} variant="info">新規追加</Button>
       </div>
-      {errorMessage && <p className="error-message">{errorMessage}</p>} {/* エラーメッセージを表示 */}
+      {errorMessage && <p className="error-message">{errorMessage}</p>} 
       <div className="todos-container">
         <div className="todos-header">Todos</div>
         {contents.map((content) => (
