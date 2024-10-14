@@ -1,10 +1,13 @@
 import 'bootstrap/dist/css/bootstrap.min.css'; // BootstrapのCSSをインポート
 import React, { useState } from 'react';
 import './App.css';
+import axios from 'axios';
 import Button from 'react-bootstrap/Button'; // React BootstrapのButtonコンポーネントをインポート
-import Container from 'react-bootstrap/Container'; // React BootstrapのContainerコンポーネントをインポーレート
+import Container from 'react-bootstrap/Container'; // React BootstrapのContainerコンポーネントをインポート
 import Navbar from 'react-bootstrap/Navbar'; // React BootstrapのNavbarコンポーネントをインポート
 import EditModal from './components/EditModal'; // 分離したEditModalコンポーネントをインポート
+
+const url = 'https://jsonplaceholder.typicode.com/posts'; // テスト用APIのエンドポイント
 
 function BasicExample() {
   const [contents, setContents] = useState([]);
@@ -17,53 +20,82 @@ function BasicExample() {
   const [errorModalMessage, setModalErrorMessage] = useState(''); // 保存時のエラーメッセージの状態を管理
 
   // 新規追加ボタンクリック時の動作
-  const onClickAdd = () => {
+  const onClickAdd = async () => {
     if (addText === "") {
       setErrorMessage('文字が未入力です'); // エラーメッセージを表示
+      console.log('エラー: テキストボックスが空です。');
       return;
     }
-    const id = Date.now();  // 一意のIDを生成
-    const newContent = {
-      id,
-      content: (
-        <div className="todo-item" key={id}>
-          <div className="todo-text">
-            <p className="todo-paragraph">{addText}</p>
+
+    try {
+      console.log('POSTリクエストを送信します...', { title: addText });
+
+      // テスト用APIにPOSTリクエストを送信
+      const response = await axios.post(url, { title: addText }, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      console.log('POSTリクエスト成功:', response.data);
+
+      // サーバーから返された新しいデータをもとにコンテンツを更新
+      const newContent = {
+        id: response.data.id,  // サーバーから返されるIDを使用
+        content: (
+          <div className="todo-item" key={response.data.id}>
+            <div className="todo-text">
+              <p className="todo-paragraph">{response.data.title}</p>
+            </div>
+            <div className="todo-buttons">
+              <Button variant="primary" size="sm" onClick={() => handleEdit(response.data.id)}>
+                編集
+              </Button>{' '}
+              <Button onClick={() => handleDelete(response.data.id)} variant="danger" size="sm">
+                削除
+              </Button>
+            </div>
           </div>
-          <div className="todo-buttons">
-            <Button variant="primary" size="sm" onClick={() => handleEdit(id)}>
-              編集
-            </Button>{' '}
-            <Button onClick={() => handleDelete(id)} variant="danger" size="sm">
-              削除
-            </Button>
-          </div>
-        </div>
-      )
-    };
-    setContents([...contents, newContent]);
-    setAddText('');
-    setErrorMessage(''); // エラーメッセージをクリア
+        ),
+      };
+
+      setContents([...contents, newContent]);
+      console.log('新しいコンテンツが追加されました:', newContent);
+
+      setAddText('');
+      setErrorMessage(''); // エラーメッセージをクリア
+    } catch (error) {
+      console.error('POSTリクエストエラー:', error);
+
+      // エラーの詳細な内容をコンソールに表示
+      if (error.response) {
+        console.error('サーバーからのエラー:', error.response.data);
+        console.error('ステータスコード:', error.response.status);
+      } else if (error.request) {
+        console.error('サーバーからのレスポンスがありません:', error.request);
+      } else {
+        console.error('リクエストの設定エラー:', error.message);
+      }
+
+      setErrorMessage('データの追加に失敗しました。サーバーエラーが発生しました。');
+    }
   };
 
-  // 指定行をidにて判断しを削除
+  // 指定行をidにて判断し削除
   const handleDelete = (id) => {
     setContents(prevContents => prevContents.filter(content => content.id !== id));
   };
 
   // 編集ボタンクリック時の動作
   const handleEdit = (id) => {
-    console.log('OK');
     setShowModal(true); // モーダルを表示
     const contentToEdit = contents.find(content => content.id === id);
     if (contentToEdit) {
-      // JSXからテキストを取得する方法
       const textToEdit = contentToEdit.content.props.children[0].props.children.props.children;
       setSelectedContentId(id); // 編集対象のコンテンツIDをセット
       setEditedText(textToEdit); // 編集用テキストをセット
       setIsSaveButtonVisible(true); // 初期状態でボタンの表示状態を設定
-      setModalErrorMessage(""); // モーダル内のエラーメッセージをクリア
-
+      setModalErrorMessage(''); // モーダル内のエラーメッセージをクリア
     }
   };
 
@@ -105,30 +137,7 @@ function BasicExample() {
     setModalErrorMessage(''); // エラーメッセージをクリア
   };
 
-  // 新規追加時のテキストボックスの入力に応じてエラーメッセージをクリア
-  const handleAddTextChange = (e) => {
-    setAddText(e.target.value);
-    if (e.target.value !== "") {
-      setErrorMessage(''); // テキストボックスに値がある場合はエラーメッセージをクリア
-    }
-  };
-
-  // テキストボックスの入力に応じて保存ボタンの表示状態を更新
-  const handleChange = (e) => {
-    const newText = e.target.value;
-    setEditedText(newText);
-    if (newText !== "") {
-      setModalErrorMessage(''); // エラーメッセージをクリア
-    }
-  };
-
-  // エンターキーを押したときにonClickAddを呼び出す
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      onClickAdd();
-    }
-  };
-  
+  const handleAddTextChange = (e) => setAddText(e.target.value);
 
   return (
     <section>
@@ -142,14 +151,13 @@ function BasicExample() {
           <input
             type='text'
             value={addText}
-            onChange={handleAddTextChange} // 新規追加時のテキストボックス変更に応じた処理
-            onKeyPress={handleKeyPress} // エンターキー押下時にonClickAddを呼び出す
+            onChange={handleAddTextChange}
             className="add-input"
           />
         </div>
         <Button onClick={onClickAdd} variant="info">新規追加</Button>
       </div>
-      {errorMessage && <p className="error-message">{errorMessage}</p>} 
+      {errorMessage && <p className="error-message">{errorMessage}</p>}
       <div className="todos-container">
         <div className="todos-header">Todos</div>
         {contents.map((content) => (
@@ -159,19 +167,12 @@ function BasicExample() {
         ))}
       </div>
       <EditModal
-        // モーダルが表示されているかどうかを制御。trueの場合、モーダルが表示され、falseの場合は非表示
         showModal={showModal}
-        // モーダルの閉じるボタンが押下時に呼び出し
         handleClose={handleClose}
-        // モーダル内のテキストボックスの値を管理
         editedText={editedText}
-        // モーダル内のテキストボックスの値が変更された時に呼び出される関数。新しいテキストの値をeditedTextに反映
-        handleChange={handleChange}
-        // 編集内容を保存する関数。保存ボタンがクリックされたと時に呼び出される
+        handleChange={(e) => setEditedText(e.target.value)}
         handleSave={handleSave}
-        // 保存ボタンの表示・非表示を制御。trueの場合、保存ボタンを表示、falseの場合は非表示
         isSaveButtonVisible={isSaveButtonVisible}
-        // モーダル内のテキストボックスが未入力の時、エラーメッセージを表示
         errorModalMessage={errorModalMessage}
       />
     </section>
