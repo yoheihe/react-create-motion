@@ -1,13 +1,13 @@
 import 'bootstrap/dist/css/bootstrap.min.css'; // BootstrapのCSSをインポート
 import React, { useState } from 'react';
 import './App.css';
-import axios from 'axios';
 import Button from 'react-bootstrap/Button'; // React BootstrapのButtonコンポーネントをインポート
-import Container from 'react-bootstrap/Container'; // React BootstrapのContainerコンポーネントをインポート
+import Container from 'react-bootstrap/Container'; // React BootstrapのContainerコンポーネントをインポーレート
 import Navbar from 'react-bootstrap/Navbar'; // React BootstrapのNavbarコンポーネントをインポート
 import EditModal from './components/EditModal'; // 分離したEditModalコンポーネントをインポート
+import axios from 'axios'; // Axiosをインポート
 
-const url = 'https://jsonplaceholder.typicode.com/posts'; // テスト用APIのエンドポイント
+const url = 'https://sample-api.manabupanda.net/api/list'; // テスト用APIのエンドポイント
 
 function BasicExample() {
   const [contents, setContents] = useState([]);
@@ -20,32 +20,42 @@ function BasicExample() {
   const [errorModalMessage, setModalErrorMessage] = useState(''); // 保存時のエラーメッセージの状態を管理
 
   // 新規追加ボタンクリック時の動作
-  const onClickAdd = async () => {
+const onClickAdd = async () => {
     if (addText === "") {
       setErrorMessage('文字が未入力です'); // エラーメッセージを表示
-      console.log('エラー: テキストボックスが空です。');
       return;
     }
 
-    try {
-      console.log('POSTリクエストを送信します...', { title: addText });
+    const id = Date.now(); // クライアント側で一意のIDを生成
 
-      // テスト用APIにPOSTリクエストを送信
-      const response = await axios.post(url, { title: addText }, {
+    console.log("新規追加のPOSTリクエストを送信します:");
+    console.log("送信するデータ: ", {
+      id: id,
+      name: addText, // APIで期待されるプロパティ名をnameに変更
+    });
+
+    try {
+      // POSTリクエストを送信。idとaddTextを送信
+      const response = await axios.post(url, {
+        id: id, // クライアント側で生成したIDを送信
+        name: addText, // nameプロパティとしてテキストを送信
+      }, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
 
-      console.log('POSTリクエスト成功:', response.data);
+      console.log("POSTリクエストが成功しました:");
+      console.log("レスポンスデータ: ", response.data);
+      console.log("ステータスコード: ", response.status);
 
-      // サーバーから返された新しいデータをもとにコンテンツを更新
+      // サーバーからのレスポンスデータを使用して新しいTodoを作成
       const newContent = {
-        id: response.data.id,  // サーバーから返されるIDを使用
+        id: response.data.id,  // サーバーから返されたIDを使用
         content: (
           <div className="todo-item" key={response.data.id}>
             <div className="todo-text">
-              <p className="todo-paragraph">{response.data.title}</p>
+              <p className="todo-paragraph">{response.data.name}</p> {/* nameを使用 */}
             </div>
             <div className="todo-buttons">
               <Button variant="primary" size="sm" onClick={() => handleEdit(response.data.id)}>
@@ -59,15 +69,12 @@ function BasicExample() {
         ),
       };
 
-      setContents([...contents, newContent]);
-      console.log('新しいコンテンツが追加されました:', newContent);
-
-      setAddText('');
+      setContents([...contents, newContent]); // 新しいTodoをリストに追加
+      setAddText(''); // テキストボックスをクリア
       setErrorMessage(''); // エラーメッセージをクリア
+
     } catch (error) {
       console.error('POSTリクエストエラー:', error);
-
-      // エラーの詳細な内容をコンソールに表示
       if (error.response) {
         console.error('サーバーからのエラー:', error.response.data);
         console.error('ステータスコード:', error.response.status);
@@ -76,12 +83,10 @@ function BasicExample() {
       } else {
         console.error('リクエストの設定エラー:', error.message);
       }
-
-      setErrorMessage('データの追加に失敗しました。サーバーエラーが発生しました。');
     }
   };
 
-  // 指定行をidにて判断し削除
+  // 指定行をidにて判断しを削除
   const handleDelete = (id) => {
     setContents(prevContents => prevContents.filter(content => content.id !== id));
   };
@@ -95,7 +100,7 @@ function BasicExample() {
       setSelectedContentId(id); // 編集対象のコンテンツIDをセット
       setEditedText(textToEdit); // 編集用テキストをセット
       setIsSaveButtonVisible(true); // 初期状態でボタンの表示状態を設定
-      setModalErrorMessage(''); // モーダル内のエラーメッセージをクリア
+      setModalErrorMessage(""); // モーダル内のエラーメッセージをクリア
     }
   };
 
@@ -137,7 +142,29 @@ function BasicExample() {
     setModalErrorMessage(''); // エラーメッセージをクリア
   };
 
-  const handleAddTextChange = (e) => setAddText(e.target.value);
+  // 新規追加時のテキストボックスの入力に応じてエラーメッセージをクリア
+  const handleAddTextChange = (e) => {
+    setAddText(e.target.value);
+    if (e.target.value !== "") {
+      setErrorMessage(''); // テキストボックスに値がある場合はエラーメッセージをクリア
+    }
+  };
+
+  // テキストボックスの入力に応じて保存ボタンの表示状態を更新
+  const handleChange = (e) => {
+    const newText = e.target.value;
+    setEditedText(newText);
+    if (newText !== "") {
+      setModalErrorMessage(''); // エラーメッセージをクリア
+    }
+  };
+
+  // エンターキーを押したときにonClickAddを呼び出す
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      onClickAdd();
+    }
+  };
 
   return (
     <section>
@@ -151,13 +178,14 @@ function BasicExample() {
           <input
             type='text'
             value={addText}
-            onChange={handleAddTextChange}
+            onChange={handleAddTextChange} // 新規追加時のテキストボックス変更に応じた処理
+            onKeyPress={handleKeyPress} // エンターキー押下時にonClickAddを呼び出す
             className="add-input"
           />
         </div>
         <Button onClick={onClickAdd} variant="info">新規追加</Button>
       </div>
-      {errorMessage && <p className="error-message">{errorMessage}</p>}
+      {errorMessage && <p className="error-message">{errorMessage}</p>} {/* エラーメッセージを表示 */}
       <div className="todos-container">
         <div className="todos-header">Todos</div>
         {contents.map((content) => (
@@ -170,7 +198,7 @@ function BasicExample() {
         showModal={showModal}
         handleClose={handleClose}
         editedText={editedText}
-        handleChange={(e) => setEditedText(e.target.value)}
+        handleChange={handleChange}
         handleSave={handleSave}
         isSaveButtonVisible={isSaveButtonVisible}
         errorModalMessage={errorModalMessage}
