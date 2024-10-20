@@ -86,9 +86,21 @@ const onClickAdd = async () => {
     }
   };
 
-  // 指定行をidにて判断しを削除
-  const handleDelete = (id) => {
-    setContents(prevContents => prevContents.filter(content => content.id !== id));
+  // 削除ボタンクリック時の動作
+  const handleDelete = async (id) => {
+    try {
+      const deleteUrl = `${url}/${id}`;
+      const response = await axios.delete(deleteUrl);
+      console.log('DELETEリクエスト成功:', response.data);
+
+      // 成功したらリストから削除
+      setContents(prevContents => prevContents.filter(content => content.id !== id));
+    } catch (error) {
+      console.error('DELETEリクエストに失敗しました:', error);
+      if (error.response) {
+        console.error('サーバーからのエラーレスポンス:', error.response.data);
+      }
+    }
   };
 
   // 編集ボタンクリック時の動作
