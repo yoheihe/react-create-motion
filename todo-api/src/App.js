@@ -105,11 +105,14 @@ const onClickAdd = async () => {
 
   // 編集ボタンクリック時の動作
   const handleEdit = (id) => {
+    console.log('編集対象のID:', id); // 追加
     setShowModal(true); // モーダルを表示
     const contentToEdit = contents.find(content => content.id === id);
     if (contentToEdit) {
-      const textToEdit = contentToEdit.content.props.children[0].props.children.props.children;
       setSelectedContentId(id); // 編集対象のコンテンツIDをセット
+
+      const textToEdit = contentToEdit.content.props.children[0].props.children.props.children;
+
       setEditedText(textToEdit); // 編集用テキストをセット
       setIsSaveButtonVisible(true); // 初期状態でボタンの表示状態を設定
       setModalErrorMessage(""); // モーダル内のエラーメッセージをクリア
@@ -120,12 +123,20 @@ const onClickAdd = async () => {
   const handleClose = () => setShowModal(false);
 
   // 編集内容を保存
-  const handleSave = () => {
+  const handleSave = async (id) => {
+    const editID = id;
     if (editedText === "") {
       setModalErrorMessage('文字が未入力です'); // エラーメッセージを表示
-      setIsSaveButtonVisible(false); // ボタンを非表示にする
       return;
     }
+    try {
+      // 編集された内容をサーバーに送信 (POSTリクエスト)
+
+      const response = await axios.post(`${url}/${editID}`, {
+        name: editedText,
+      });
+
+      // 成功したら、contentsを更新
     setContents(prevContents =>
       prevContents.map(content =>
         content.id === selectedContentId
@@ -134,7 +145,7 @@ const onClickAdd = async () => {
               content: (
                 <div className="todo-item" key={content.id}>
                   <div className="todo-text">
-                    <p className="todo-paragraph">{editedText}</p>
+                    <p className="todo-paragraph">{response.data.name}</p>
                   </div>
                   <div className="todo-buttons">
                     <Button variant="primary" size="sm" onClick={() => handleEdit(content.id)}>
@@ -150,9 +161,11 @@ const onClickAdd = async () => {
           : content
       )
     );
-    setShowModal(false);
-    setModalErrorMessage(''); // エラーメッセージをクリア
-  };
+    handleClose(); // モーダルを閉じる
+  } catch (error) {
+    console.error('POSTリクエストに失敗しました:', error);
+  }
+};
 
   // 新規追加時のテキストボックスの入力に応じてエラーメッセージをクリア
   const handleAddTextChange = (e) => {
@@ -211,6 +224,8 @@ const onClickAdd = async () => {
         handleClose={handleClose}
         editedText={editedText}
         handleChange={handleChange}
+        selectedContentId={selectedContentId} // 編集対象のIDを渡す
+        setContents={setContents} // contentsを更新する関数を渡す
         handleSave={handleSave}
         isSaveButtonVisible={isSaveButtonVisible}
         errorModalMessage={errorModalMessage}
