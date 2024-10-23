@@ -2,7 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'; // BootstrapのCSSをインポー
 import React, { useState } from 'react';
 import './App.css';
 import Button from 'react-bootstrap/Button'; // React BootstrapのButtonコンポーネントをインポート
-import Container from 'react-bootstrap/Container'; // React BootstrapのContainerコンポーネントをインポーレート
+import Container from 'react-bootstrap/Container'; // React BootstrapのContainerコンポーネントをインポート
 import Navbar from 'react-bootstrap/Navbar'; // React BootstrapのNavbarコンポーネントをインポート
 import EditModal from './components/EditModal'; // 分離したEditModalコンポーネントをインポート
 import axios from 'axios'; // Axiosをインポート
@@ -18,9 +18,10 @@ function BasicExample() {
   const [isSaveButtonVisible, setIsSaveButtonVisible] = useState(true); // 保存ボタンの表示状態を管理
   const [errorMessage, setErrorMessage] = useState(''); // 新規追加時のエラーメッセージの状態を管理
   const [errorModalMessage, setModalErrorMessage] = useState(''); // 保存時のエラーメッセージの状態を管理
+  const [displayedId, setDisplayedId] = useState(null); // 表示用のIDを管理
 
   // 新規追加ボタンクリック時の動作
-const onClickAdd = async () => {
+  const onClickAdd = async () => {
     if (addText === "") {
       setErrorMessage('文字が未入力です'); // エラーメッセージを表示
       return;
@@ -35,10 +36,9 @@ const onClickAdd = async () => {
     });
 
     try {
-      // POSTリクエストを送信。idとaddTextを送信
       const response = await axios.post(url, {
-        id: id, // クライアント側で生成したIDを送信
-        name: addText, // nameプロパティとしてテキストを送信
+        id: id,
+        name: addText,
       }, {
         headers: {
           'Content-Type': 'application/json',
@@ -47,15 +47,13 @@ const onClickAdd = async () => {
 
       console.log("POSTリクエストが成功しました:");
       console.log("レスポンスデータ: ", response.data);
-      console.log("ステータスコード: ", response.status);
 
-      // サーバーからのレスポンスデータを使用して新しいTodoを作成
       const newContent = {
-        id: response.data.id,  // サーバーから返されたIDを使用
+        id: response.data.id, 
         content: (
           <div className="todo-item" key={response.data.id}>
             <div className="todo-text">
-              <p className="todo-paragraph">{response.data.name}</p> {/* nameを使用 */}
+              <p className="todo-paragraph">{response.data.name}</p>
             </div>
             <div className="todo-buttons">
               <Button variant="primary" size="sm" onClick={() => handleEdit(response.data.id)}>
@@ -69,20 +67,12 @@ const onClickAdd = async () => {
         ),
       };
 
-      setContents([...contents, newContent]); // 新しいTodoをリストに追加
-      setAddText(''); // テキストボックスをクリア
-      setErrorMessage(''); // エラーメッセージをクリア
+      setContents([...contents, newContent]);
+      setAddText(''); 
+      setErrorMessage(''); 
 
     } catch (error) {
       console.error('POSTリクエストエラー:', error);
-      if (error.response) {
-        console.error('サーバーからのエラー:', error.response.data);
-        console.error('ステータスコード:', error.response.status);
-      } else if (error.request) {
-        console.error('サーバーからのレスポンスがありません:', error.request);
-      } else {
-        console.error('リクエストの設定エラー:', error.message);
-      }
     }
   };
 
@@ -93,29 +83,26 @@ const onClickAdd = async () => {
       const response = await axios.delete(deleteUrl);
       console.log('DELETEリクエスト成功:', response.data);
 
-      // 成功したらリストから削除
       setContents(prevContents => prevContents.filter(content => content.id !== id));
     } catch (error) {
       console.error('DELETEリクエストに失敗しました:', error);
-      if (error.response) {
-        console.error('サーバーからのエラーレスポンス:', error.response.data);
-      }
     }
   };
 
   // 編集ボタンクリック時の動作
   const handleEdit = (id) => {
-    console.log('編集対象のID:', id); // 追加
-    setShowModal(true); // モーダルを表示
+    console.log('編集対象のID:', id); 
+    setDisplayedId(id); // 表示用にIDをセット
+    setShowModal(true);
     const contentToEdit = contents.find(content => content.id === id);
     if (contentToEdit) {
-      setSelectedContentId(id); // 編集対象のコンテンツIDをセット
+      setSelectedContentId(id); 
 
       const textToEdit = contentToEdit.content.props.children[0].props.children.props.children;
 
-      setEditedText(textToEdit); // 編集用テキストをセット
-      setIsSaveButtonVisible(true); // 初期状態でボタンの表示状態を設定
-      setModalErrorMessage(""); // モーダル内のエラーメッセージをクリア
+      setEditedText(textToEdit); 
+      setIsSaveButtonVisible(true); 
+      setModalErrorMessage(""); 
     }
   };
 
@@ -123,68 +110,62 @@ const onClickAdd = async () => {
   const handleClose = () => setShowModal(false);
 
   // 編集内容を保存
-  const handleSave = async (id) => {
-    const editID = id;
+  const handleSave = async () => {
     if (editedText === "") {
-      setModalErrorMessage('文字が未入力です'); // エラーメッセージを表示
+      setModalErrorMessage('文字が未入力です'); 
       return;
     }
     try {
-      // 編集された内容をサーバーに送信 (POSTリクエスト)
-
-      const response = await axios.post(`${url}/${editID}`, {
+      const response = await axios.post(`${url}/${displayedId}`, {
         name: editedText,
       });
 
-      // 成功したら、contentsを更新
-    setContents(prevContents =>
-      prevContents.map(content =>
-        content.id === selectedContentId
-          ? {
-              ...content,
-              content: (
-                <div className="todo-item" key={content.id}>
-                  <div className="todo-text">
-                    <p className="todo-paragraph">{response.data.name}</p>
+      setContents(prevContents =>
+        prevContents.map(content =>
+          content.id === selectedContentId
+            ? {
+                ...content,
+                content: (
+                  <div className="todo-item" key={content.id}>
+                    <div className="todo-text">
+                      <p className="todo-paragraph">{response.data.name}</p>
+                    </div>
+                    <div className="todo-buttons">
+                      <Button variant="primary" size="sm" onClick={() => handleEdit(content.id)}>
+                        編集
+                      </Button>{' '}
+                      <Button onClick={() => handleDelete(content.id)} variant="danger" size="sm">
+                        削除
+                      </Button>
+                    </div>
                   </div>
-                  <div className="todo-buttons">
-                    <Button variant="primary" size="sm" onClick={() => handleEdit(content.id)}>
-                      編集
-                    </Button>{' '}
-                    <Button onClick={() => handleDelete(content.id)} variant="danger" size="sm">
-                      削除
-                    </Button>
-                  </div>
-                </div>
-              )
-            }
-          : content
-      )
-    );
-    handleClose(); // モーダルを閉じる
-  } catch (error) {
-    console.error('POSTリクエストに失敗しました:', error);
-  }
-};
+                )
+              }
+            : content
+        )
+      );
+      handleClose(); 
+    } catch (error) {
+      console.error('POSTリクエストに失敗しました:', error);
+    }
+  };
 
   // 新規追加時のテキストボックスの入力に応じてエラーメッセージをクリア
   const handleAddTextChange = (e) => {
     setAddText(e.target.value);
     if (e.target.value !== "") {
-      setErrorMessage(''); // テキストボックスに値がある場合はエラーメッセージをクリア
+      setErrorMessage(''); 
     }
   };
 
-  // テキストボックスの入力に応じて保存ボタンの表示状態を更新
   const handleChange = (e) => {
     const newText = e.target.value;
     setEditedText(newText);
     if (newText !== "") {
-      setModalErrorMessage(''); // エラーメッセージをクリア
+      setModalErrorMessage(''); 
     }
   };
 
-  // エンターキーを押したときにonClickAddを呼び出す
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
       onClickAdd();
@@ -203,14 +184,14 @@ const onClickAdd = async () => {
           <input
             type='text'
             value={addText}
-            onChange={handleAddTextChange} // 新規追加時のテキストボックス変更に応じた処理
-            onKeyPress={handleKeyPress} // エンターキー押下時にonClickAddを呼び出す
+            onChange={handleAddTextChange}
+            onKeyPress={handleKeyPress}
             className="add-input"
           />
         </div>
         <Button onClick={onClickAdd} variant="info">新規追加</Button>
       </div>
-      {errorMessage && <p className="error-message">{errorMessage}</p>} {/* エラーメッセージを表示 */}
+      {errorMessage && <p className="error-message">{errorMessage}</p>}
       <div className="todos-container">
         <div className="todos-header">Todos</div>
         {contents.map((content) => (
@@ -219,13 +200,16 @@ const onClickAdd = async () => {
           </div>
         ))}
       </div>
+      <div>
+        {displayedId && <p>編集対象のID: {displayedId}</p>} {/* 編集対象のIDを表示 */}
+      </div>
       <EditModal
         showModal={showModal}
         handleClose={handleClose}
         editedText={editedText}
         handleChange={handleChange}
-        selectedContentId={selectedContentId} // 編集対象のIDを渡す
-        setContents={setContents} // contentsを更新する関数を渡す
+        selectedContentId={selectedContentId}
+        setContents={setContents}
         handleSave={handleSave}
         isSaveButtonVisible={isSaveButtonVisible}
         errorModalMessage={errorModalMessage}
