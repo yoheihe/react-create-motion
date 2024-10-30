@@ -19,6 +19,7 @@ function BasicExample() {
   const [errorMessage, setErrorMessage] = useState(''); // 新規追加時のエラーメッセージの状態を管理
   const [errorModalMessage, setModalErrorMessage] = useState(''); // 保存時のエラーメッセージの状態を管理
   const [displayedId, setDisplayedId] = useState(null); // 表示用のIDを管理
+  const [displayedText, setDisplayedText] = useState('');
 
   // 新規追加ボタンクリック時の動作
   const onClickAdd = async () => {
@@ -92,8 +93,10 @@ function BasicExample() {
   // 編集ボタンクリック時の動作
   const handleEdit = (id) => {
     console.log('編集対象のID:', id); 
+    console.log(addText); 
     setDisplayedId(id); // 表示用にIDをセット
     setShowModal(true);
+
     const contentToEdit = contents.find(content => content.id === id);
     if (contentToEdit) {
       setSelectedContentId(id); 
@@ -101,6 +104,7 @@ function BasicExample() {
       const textToEdit = contentToEdit.content.props.children[0].props.children.props.children;
 
       setEditedText(textToEdit); 
+      console.log(textToEdit);
       setIsSaveButtonVisible(true); 
       setModalErrorMessage(""); 
     }
@@ -144,6 +148,7 @@ function BasicExample() {
             : content
         )
       );
+      setDisplayedText(editedText); 
       handleClose(); 
     } catch (error) {
       console.error('POSTリクエストに失敗しました:', error);
