@@ -51,6 +51,7 @@ function BasicExample() {
 
       const newContent = {
         id: response.data.id, 
+        name: response.data.name,
         content: (
           <div className="todo-item" key={response.data.id}>
             <div className="todo-text">
@@ -101,10 +102,9 @@ function BasicExample() {
     if (contentToEdit) {
       setSelectedContentId(id); 
 
-      const textToEdit = contentToEdit.content.props.children[0].props.children.props.children;
-
-      setEditedText(textToEdit); 
-      console.log(textToEdit);
+      // const textToEdit = contentToEdit.content.props.children[0].props.children.props.children;
+      setEditedText(contentToEdit.name); 
+      console.log(contentToEdit.name);
       setIsSaveButtonVisible(true); 
       setModalErrorMessage(""); 
     }
