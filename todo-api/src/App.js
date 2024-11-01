@@ -19,7 +19,7 @@ function BasicExample() {
   const [errorMessage, setErrorMessage] = useState(''); // 新規追加時のエラーメッセージの状態を管理
   const [errorModalMessage, setModalErrorMessage] = useState(''); // 保存時のエラーメッセージの状態を管理
   const [displayedId, setDisplayedId] = useState(null); // 表示用のIDを管理
-  const [displayedText, setDisplayedText] = useState('');
+
 
   // 新規追加ボタンクリック時の動作
   const onClickAdd = async () => {
@@ -58,7 +58,7 @@ function BasicExample() {
               <p className="todo-paragraph">{response.data.name}</p>
             </div>
             <div className="todo-buttons">
-              <Button variant="primary" size="sm" onClick={() => handleEdit(response.data.id)}>
+              <Button variant="primary" size="sm" onClick={() => handleEdit(response.data.id, response.data.name)}>
                 編集
               </Button>{' '}
               <Button onClick={() => handleDelete(response.data.id)} variant="danger" size="sm">
@@ -92,19 +92,16 @@ function BasicExample() {
   };
 
   // 編集ボタンクリック時の動作
-  const handleEdit = (id) => {
+  const handleEdit = (id, name) => {
     console.log('編集対象のID:', id); 
-    console.log(addText); 
+    console.log(name); 
     setDisplayedId(id); // 表示用にIDをセット
     setShowModal(true);
 
     const contentToEdit = contents.find(content => content.id === id);
     if (contentToEdit) {
       setSelectedContentId(id); 
-
-      // const textToEdit = contentToEdit.content.props.children[0].props.children.props.children;
-      setEditedText(contentToEdit.name); 
-      console.log(contentToEdit.name);
+      setEditedText(name); 
       setIsSaveButtonVisible(true); 
       setModalErrorMessage(""); 
     }
@@ -135,7 +132,7 @@ function BasicExample() {
                       <p className="todo-paragraph">{response.data.name}</p>
                     </div>
                     <div className="todo-buttons">
-                      <Button variant="primary" size="sm" onClick={() => handleEdit(content.id)}>
+                      <Button variant="primary" size="sm" onClick={() => handleEdit(content.id, content.name)}>
                         編集
                       </Button>{' '}
                       <Button onClick={() => handleDelete(content.id)} variant="danger" size="sm">
@@ -148,7 +145,7 @@ function BasicExample() {
             : content
         )
       );
-      setDisplayedText(editedText); 
+
       handleClose(); 
     } catch (error) {
       console.error('POSTリクエストに失敗しました:', error);
@@ -207,6 +204,7 @@ function BasicExample() {
       </div>
       <div>
         {displayedId && <p>編集対象のID: {displayedId}</p>} {/* 編集対象のIDを表示 */}
+        {editedText && <p>編集対象のNAME: {editedText}</p>} {/* 編集対象のNAMEを表示 */}
       </div>
       <EditModal
         showModal={showModal}
