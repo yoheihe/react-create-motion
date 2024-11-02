@@ -34,13 +34,16 @@ function EditModal({
           />
           {errorModalMessage && <p className="error-message">{errorModalMessage}</p>}
         </div>
+        <div>
+          <p>こんにちは</p>
+        </div>
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={handleClose}>
           閉じる
         </Button>
         {isSaveButtonVisible && (
-          <Button variant="primary" onClick={handleSave}>
+          <Button variant="primary" onClick={() => handleSave(editedText)}>
             保存
           </Button>
         )}

@@ -95,6 +95,7 @@ function BasicExample() {
   const handleEdit = (id, name) => {
     console.log('編集対象のID:', id); 
     console.log(name); 
+    setEditedText(name); 
     setDisplayedId(id); // 表示用にIDをセット
     setShowModal(true);
 
@@ -112,10 +113,15 @@ function BasicExample() {
 
   // 編集内容を保存
   const handleSave = async () => {
+
     if (editedText === "") {
       setModalErrorMessage('文字が未入力です'); 
       return;
     }
+
+    console.log("保存されるテキスト:", editedText);
+    setEditedText(editedText); 
+
     try {
       const response = await axios.post(`${url}/${displayedId}`, {
         name: editedText,
@@ -126,13 +132,14 @@ function BasicExample() {
           content.id === selectedContentId
             ? {
                 ...content,
+                name: response.data.name,
                 content: (
                   <div className="todo-item" key={content.id}>
                     <div className="todo-text">
                       <p className="todo-paragraph">{response.data.name}</p>
                     </div>
                     <div className="todo-buttons">
-                      <Button variant="primary" size="sm" onClick={() => handleEdit(content.id, content.name)}>
+                      <Button variant="primary" size="sm" onClick={() => handleEdit(content.id, response.data.name)}>
                         編集
                       </Button>{' '}
                       <Button onClick={() => handleDelete(content.id)} variant="danger" size="sm">
@@ -145,6 +152,7 @@ function BasicExample() {
             : content
         )
       );
+
 
       handleClose(); 
     } catch (error) {
