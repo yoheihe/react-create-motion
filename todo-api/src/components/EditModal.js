@@ -34,9 +34,7 @@ function EditModal({
           />
           {errorModalMessage && <p className="error-message">{errorModalMessage}</p>}
         </div>
-        <div>
-          <p>こんにちは</p>
-        </div>
+        
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={handleClose}>

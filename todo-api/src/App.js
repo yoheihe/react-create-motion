@@ -119,13 +119,16 @@ function BasicExample() {
       return;
     }
 
-    console.log("保存されるテキスト:", editedText);
-    setEditedText(editedText); 
+      // リクエスト前に保存するテキストとURLをコンソールに表示
+      console.log("保存されるテキスト:", editedText); // 送信するテキスト
+      console.log("リクエストURL:", `${url}/${displayedId}`); // リクエストのURL
 
     try {
       const response = await axios.post(`${url}/${displayedId}`, {
         name: editedText,
       });
+
+      console.log("サーバーからのレスポンス:", response.data); // レスポンス内容をコンソール表示
 
       setContents(prevContents =>
         prevContents.map(content =>
@@ -153,7 +156,7 @@ function BasicExample() {
         )
       );
 
-
+      setEditedText(''); // 編集テキストの入力内容をクリア
       handleClose(); 
     } catch (error) {
       console.error('POSTリクエストに失敗しました:', error);
