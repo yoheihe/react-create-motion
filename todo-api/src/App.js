@@ -94,15 +94,16 @@ function BasicExample() {
   // 編集ボタンクリック時の動作
   const handleEdit = (id, name) => {
     console.log('編集対象のID:', id); 
-    console.log(name); 
+    console.log('編集対象の名前:', name); 
     setEditedText(name); 
     setDisplayedId(id); // 表示用にIDをセット
     setShowModal(true);
+    setSelectedContentId(id); // 編集する内容のIDをセット
 
     const contentToEdit = contents.find(content => content.id === id);
     if (contentToEdit) {
-      setSelectedContentId(id); 
-      setEditedText(name); 
+      // setSelectedContentId(id); 
+      // setEditedText(name); 
       setIsSaveButtonVisible(true); 
       setModalErrorMessage(""); 
     }
