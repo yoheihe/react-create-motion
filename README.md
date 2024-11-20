@@ -1,5 +1,7 @@
-# name
+<h1 align="center">
 react-create-motion
+</h1>
+
 
 ![image](https://github.com/user-attachments/assets/8b59c7d2-5ffe-4f33-abe5-01429cf5944b)
 
@@ -28,8 +30,14 @@ axiosを使用してのHTTP通信（GET,POST,DELETE）
 ・github画面の右側の緑のcodeボタンからダウンロードを選択し、zipファイルを任意の保存先にダウンロード  
 ・ダウンロードしたファイルをダブルクリック、もしくは右クリック⇨開くにて解凍  
 ・エディタ上からターミナルを開き、npm installを行う  
+```
+npm install
+```
 ・エディタを開き、解凍したファイルを開く  
 ・ファイルを開いた状態でnpm startを行い、ブラウザに画面を表示  
+```
+npm start
+```
 
 ## Reference
 
