@@ -32,11 +32,14 @@ axiosを使用してのHTTP通信（GET,POST,DELETE）
 ```
 npm install
 ```
+・React bootstrapのインストール  
+・axiosのインストール  
 ・エディタを開き、解凍したファイルを開く  
 ・ファイルを開いた状態でnpm startを行い、ブラウザに画面を表示  
 ```
 npm start
 ```
+・ブラウザに表示された画面から操作を行う
 
 # Reference
 
