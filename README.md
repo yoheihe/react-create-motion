@@ -1,70 +1,72 @@
-# Getting Started with Create React App
+<h1 align="center">
+react-create-motion
+</h1>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+![image](https://github.com/user-attachments/assets/d09a6bf3-332b-4420-a54d-1907c6999c47)
 
-## Available Scripts
+# Overview
+React（JavaScriptライブラリ）を使用してtodoアプリの作成  
+axiosを使用してのHTTP通信（GET,POST,DELETE）
 
-In the project directory, you can run:
+# Requirement
+- macOS M1 2020
+- Visual Studio Code 1.94.2
+- node 20.11.1
+- react 18.3.1
+- react-bootstrap 2.10.4
+- axios 1.7.7
 
-### `npm start`
+# Usage
+ブラウザ画面に表示されたtodoリストの使い方  
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+　1. テキストボックスにコメントを入力  
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+　2. 新規ボタンを押下時、todos以下に入力されたコメントを反映  
 
-### `npm test`
+　3. 削除ボタン押下時、入力されたコメントを削除  
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+　4-1. 編集ボタン押下時、編集モーダルが開く  
 
-### `npm run build`
+　4-2. モーダルのテキストボックスに新しくコメントを入力  
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+　4-3. 閉じるボタン押下時、編集モーダルを閉じる  
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+　4-4. 保存ボタン押下時、新しく入力したコメントがtodosに反映
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+# Features
+・github画面の右側の緑のcodeボタンからダウンロードを選択し、zipファイルを任意の保存先にダウンロード  
 
-### `npm run eject`
+![image](https://github.com/user-attachments/assets/6ff2d73e-94f5-4403-bad0-af4baf8b266b)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+・ダウンロードしたファイルをダブルクリック、もしくは右クリック⇨開くにて解凍  
+・エディタ上からターミナルを開き、npm installを行う  
+```
+npm install
+```
+・React bootstrapのインストールを行う  
+```
+npm install bootstrap
+```
+・axiosのインストールを行う  
+```
+npm install axios
+```
+・エディタを開き、解凍したファイルを開く  
+・ファイルを開いた状態でnpm startを行い、ブラウザに画面を表示  
+```
+npm start
+```
+・ブラウザに表示された画面から操作を行う
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+# History
+・学びの経緯  
+営業職（自社サービス販売）のときに、サービス改善に向けてエンジニア、デザイナーとの調整を機にプログラミングに興味を持つ。  
+オンラインサイトでの学習でHTML、CSSに取り組み知見を得た後、より実践的な技術を習得したいと思い、  
+MENTAにて現役エンジニアからフロントエンドを学ぶ。  
+効率的なデータ処理とユーザー体験の向上に重点を置いたReactを学ぶことで、より充実感のあるサービスが提供できると思い学習に取り組んでいます。  
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+・どんなことを学んでいるか  
+Reactを使ったモックアップの作成  
+作成した画面に動きをつける  
+動きに対してHTTPリクエストを送信する
