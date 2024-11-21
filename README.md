@@ -27,13 +27,23 @@ axiosを使用してのHTTP通信（GET,POST,DELETE）
 
 # Features
 ・github画面の右側の緑のcodeボタンからダウンロードを選択し、zipファイルを任意の保存先にダウンロード  
+
+![image](https://github.com/user-attachments/assets/6ff2d73e-94f5-4403-bad0-af4baf8b266b)
+
+
 ・ダウンロードしたファイルをダブルクリック、もしくは右クリック⇨開くにて解凍  
 ・エディタ上からターミナルを開き、npm installを行う  
 ```
 npm install
 ```
-・React bootstrapのインストール  
-・axiosのインストール  
+・React bootstrapのインストールを行う  
+```
+npm install bootstrap
+```
+・axiosのインストールを行う  
+```
+npm install axios
+```
 ・エディタを開き、解凍したファイルを開く  
 ・ファイルを開いた状態でnpm startを行い、ブラウザに画面を表示  
 ```
@@ -44,13 +54,13 @@ npm start
 # Reference
 
 # History
-学びの経緯  
+・学びの経緯  
 営業職（自社サービス販売）のときに、サービス改善に向けてエンジニア、デザイナーとの調整を機にプログラミングに興味を持つ。  
 オンラインサイトでの学習でHTML、CSSに取り組み知見を得た後、より実践的な技術を習得したいと思い、  
 MENTAにて現役エンジニアからフロントエンドを学ぶ。  
 効率的なデータ処理とユーザー体験の向上に重点を置いたReactを学ぶことで、より充実感のあるサービスが提供できると思い学習に取り組んでいます。  
-どんなことを学んでいるか
 
-# Licence
-
-[MIT](https://......)
+・どんなことを学んでいるか  
+Reactを使ったモックアップの作成  
+作成した画面に動きをつける  
+動きに対してHTTPリクエストを送信する
