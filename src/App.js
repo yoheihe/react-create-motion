@@ -1,6 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css'; // BootstrapのCSSをインポート
 import React, { useState } from 'react';
-import './App.css';
+import './App.css'; //cssをインポート
 import Button from 'react-bootstrap/Button'; // React BootstrapのButtonコンポーネントをインポート
 import Container from 'react-bootstrap/Container'; // React BootstrapのContainerコンポーネントをインポート
 import Navbar from 'react-bootstrap/Navbar'; // React BootstrapのNavbarコンポーネントをインポート
@@ -10,7 +10,7 @@ import axios from 'axios'; // Axiosをインポート
 const url = 'https://sample-api.manabupanda.net/api/list'; // テスト用APIのエンドポイント
 
 function BasicExample() {
-  const [contents, setContents] = useState([]);
+  const [contents, setContents] = useState([]); // 新規追加後のモーダルを開いた時の状態を管理
   const [showModal, setShowModal] = useState(false); // モーダル初期状態を非表示にしておく
   const [selectedContentId, setSelectedContentId] = useState(null); // 編集ボタンクリック時のidを管理
   const [editedText, setEditedText] = useState(''); // フォームの状態を管理
@@ -24,17 +24,11 @@ function BasicExample() {
   // 新規追加ボタンクリック時の動作
   const onClickAdd = async () => {
     if (addText === "") {
-      setErrorMessage('文字が未入力です'); // エラーメッセージを表示
+      setErrorMessage('文字が未入力です'); 
       return;
     }
 
     const id = Date.now(); // クライアント側で一意のIDを生成
-
-    console.log("新規追加のPOSTリクエストを送信します:");
-    console.log("送信するデータ: ", {
-      id: id,
-      name: addText, // APIで期待されるプロパティ名をnameに変更
-    });
 
     try {
       const response = await axios.post(url, {
@@ -45,9 +39,6 @@ function BasicExample() {
           'Content-Type': 'application/json',
         },
       });
-
-      console.log("POSTリクエストが成功しました:");
-      console.log("レスポンスデータ: ", response.data);
 
       const newContent = {
         id: response.data.id, 
@@ -96,14 +87,12 @@ function BasicExample() {
     console.log('編集対象のID:', id); 
     console.log('編集対象の名前:', name); 
     setEditedText(name); 
-    setDisplayedId(id); // 表示用にIDをセット
+    setDisplayedId(id); 
     setShowModal(true);
-    setSelectedContentId(id); // 編集する内容のIDをセット
+    setSelectedContentId(id); 
 
     const contentToEdit = contents.find(content => content.id === id);
     if (contentToEdit) {
-      // setSelectedContentId(id); 
-      // setEditedText(name); 
       setIsSaveButtonVisible(true); 
       setModalErrorMessage(""); 
     }
@@ -119,10 +108,6 @@ function BasicExample() {
       setModalErrorMessage('文字が未入力です'); 
       return;
     }
-
-      // リクエスト前に保存するテキストとURLをコンソールに表示
-      console.log("保存されるテキスト:", editedText); // 送信するテキスト
-      console.log("リクエストURL:", `${url}/${displayedId}`); // リクエストのURL
 
     try {
       const response = await axios.post(`${url}/${displayedId}`, {
@@ -214,10 +199,7 @@ function BasicExample() {
           </div>
         ))}
       </div>
-      <div>
-        {displayedId && <p>編集対象のID: {displayedId}</p>} {/* 編集対象のIDを表示 */}
-        {editedText && <p>編集対象のNAME: {editedText}</p>} {/* 編集対象のNAMEを表示 */}
-      </div>
+
       <EditModal
         showModal={showModal}
         handleClose={handleClose}
