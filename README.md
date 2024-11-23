@@ -9,12 +9,12 @@ React（JavaScriptライブラリ）を使用してtodoアプリの作成
 axiosを使用してのHTTP通信（GET,POST,DELETE）
 
 # Requirement
-- macOS M1 2020
-- Visual Studio Code 1.94.2
-- node 20.11.1
-- react 18.3.1
-- react-bootstrap 2.10.4
-- axios 1.7.7
+macOS M1 2020
+Visual Studio Code 1.94.2
+node 20.11.1
+react 18.3.1
+react-bootstrap 2.10.4
+axios 1.7.7
 
 # Usage
 ブラウザ画面に表示されたtodoリストの使い方  
