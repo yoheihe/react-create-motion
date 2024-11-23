@@ -34,30 +34,30 @@ axiosを使用してのHTTP通信（GET,POST,DELETE）
 　4-4. 保存ボタン押下時、新しく入力したコメントがtodosに反映
 
 # Features
-・github画面の右側の緑のcodeボタンからダウンロードを選択し、zipファイルを任意の保存先にダウンロード  
+github画面の右側の緑のcodeボタンからダウンロードを選択し、zipファイルを任意の保存先にダウンロード  
 
 ![image](https://github.com/user-attachments/assets/6ff2d73e-94f5-4403-bad0-af4baf8b266b)
 
 
-・ダウンロードしたファイルをダブルクリック、もしくは右クリック⇨開くにて解凍  
-・エディタ上からターミナルを開き、npm installを行う  
+ダウンロードしたファイルをダブルクリック、もしくは右クリック⇨開くにて解凍  
+エディタ上からターミナルを開き、npm installを行う  
 ```
 npm install
 ```
-・React bootstrapのインストールを行う  
+React bootstrapのインストールを行う  
 ```
 npm install bootstrap
 ```
-・axiosのインストールを行う  
+axiosのインストールを行う  
 ```
 npm install axios
 ```
-・エディタを開き、解凍したファイルを開く  
-・ファイルを開いた状態でnpm startを行い、ブラウザに画面を表示  
+エディタを開き、解凍したファイルを開く  
+ファイルを開いた状態でnpm startを行い、ブラウザに画面を表示  
 ```
 npm start
 ```
-・ブラウザに表示された画面から操作を行う
+ブラウザに表示された画面から操作を行う
 
 # History
 ・学びの経緯  
